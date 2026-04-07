@@ -1314,6 +1314,23 @@
 
         const adventureTiles = new Set(Array.from({ length: cityData.length - 1 }, (_, i) => i + 1));
         let nextAreaAction = 'adventure';
+        const instrumentMap = {
+            1: { name: 'Angklung', icon: '🎶', options: ['🎶','🥁','🎸','🎻'] },
+            2: { name: 'Gamelan', icon: '🎼', options: ['🎼','🎸','🎤','🥁'] },
+            3: { name: 'Suling', icon: '🎵', options: ['🎵','🎸','🎼','🥁'] },
+            4: { name: 'Sitar', icon: '🎸', options: ['🎸','🎵','🥁','🎼'] },
+            5: { name: 'Keroncong', icon: '🎻', options: ['🎻','🎼','🎸','🎵'] },
+            6: { name: 'Gendang', icon: '🥁', options: ['🥁','🎸','🎵','🎼'] },
+            7: { name: 'Kecak', icon: '🗣️', options: ['🗣️','🎸','🥁','🎼'] },
+            8: { name: 'Genggong', icon: '🎶', options: ['🎶','🎻','🥁','🎼'] },
+            9: { name: 'Gandrang', icon: '🥁', options: ['🥁','🎸','🎵','🎼'] },
+            10: { name: 'Kolintang', icon: '🥁', options: ['🥁','🎻','🎵','🎸'] },
+            11: { name: 'Tifa', icon: '🥁', options: ['🥁','🎤','🎼','🎸'] },
+            12: { name: 'Rebana', icon: '🥁', options: ['🥁','🎵','🎸','🎼'] },
+            13: { name: 'Sampe', icon: '🪕', options: ['🪕','🎼','🥁','🎸'] },
+            14: { name: 'Talempong', icon: '🥁', options: ['🥁','🎵','🎼','🎸'] },
+            15: { name: 'Tifa', icon: '🥁', options: ['🥁','🎼','🎸','🎵'] }
+        };
         const adventureState = {
             running: false,
             playerLane: 1,
@@ -1322,7 +1339,9 @@
             spawned: 0,
             maxObstacles: 5,
             intervalId: null,
-            finished: false
+            finished: false,
+            caught: false,
+            correctInstrument: null
         };
 
         const gridCoords = [
@@ -1788,8 +1807,10 @@
 
         function openAdventureOverlay() {
             const overlay = document.getElementById('adventure-overlay');
-            document.getElementById('adventure-subtitle').innerText = `Mini-game petualangan dimulai di ${cityData[state.idx].name}. Gunakan panah kiri dan kanan untuk melewati jalan dengan pohon dan rintangan.`;
-            document.getElementById('adventure-status').innerText = 'Tekan tombol mulai untuk memulai perjalanan dan melewati rintangan.';
+            const instrument = instrumentMap[state.idx] || { name: 'Alat Musik', icon: '🎵' };
+            adventureState.correctInstrument = instrument;
+            document.getElementById('adventure-subtitle').innerText = `Mini-game petualangan dimulai di ${cityData[state.idx].name}. Tangkap alat musik yang sesuai: ${instrument.name} ${instrument.icon}`;
+            document.getElementById('adventure-status').innerText = `Tekan MULAI untuk menangkap ${instrument.name}. Gunakan panah kiri dan kanan.`;
             document.getElementById('adventure-start-btn').classList.remove('hidden');
             document.getElementById('adventure-continue-btn').classList.add('hidden');
             document.getElementById('area-preview-overlay').classList.remove('show');
@@ -1808,9 +1829,10 @@
             adventureState.nextSpawn = 0;
             adventureState.spawned = 0;
             adventureState.finished = false;
+            adventureState.caught = false;
             adventureState.maxObstacles = 5;
 
-            document.getElementById('adventure-status').innerText = 'Tantangan dimulai. Arahkan karakter melewati rintangan sampai garis finish.';
+            document.getElementById('adventure-status').innerText = `Tantangan dimulai. Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon} yang jatuh dari atas.`;
             document.getElementById('adventure-start-btn').classList.add('hidden');
             document.getElementById('adventure-continue-btn').classList.add('hidden');
 
@@ -1840,45 +1862,48 @@
         }
 
         function updateAdventure() {
+            if (adventureState.caught || !adventureState.running) return;
             const stage = document.getElementById('adventure-stage');
             adventureState.nextSpawn -= 40;
-            if (adventureState.spawned < adventureState.maxObstacles && adventureState.nextSpawn <= 0) {
+            if (adventureState.nextSpawn <= 0) {
                 spawnAdventureObstacle(stage);
                 adventureState.spawned += 1;
-                adventureState.nextSpawn = 700;
+                adventureState.nextSpawn = 900;
             }
 
-            let completed = 0;
             adventureState.obstacles.forEach(obs => {
-                if (obs.done) {
-                    completed += 1;
-                    return;
-                }
-                obs.y += 2.5;
+                if (obs.done) return;
+                obs.y += 3.2;
                 obs.el.style.top = `${obs.y}%`;
-                if (!obs.hit && obs.y > 74 && obs.y < 84 && obs.lane === adventureState.playerLane) {
+                if (!obs.hit && obs.y > 80 && obs.y < 92 && obs.lane === adventureState.playerLane) {
                     obs.hit = true;
+                    if (obs.icon === adventureState.correctInstrument.icon) {
+                        obs.el.style.background = '#34d399';
+                        obs.el.style.color = '#ffffff';
+                        playSound(523.25, 0.2);
+                        adventureState.caught = true;
+                        completeAdventure();
+                        return;
+                    }
                     state.lives = Math.max(0, state.lives - 1);
                     document.getElementById('life-icons').innerText = '❤️'.repeat(Math.max(0, state.lives));
                     playSound(130, 0.2);
                     obs.el.style.background = '#f87171';
+                    obs.el.style.color = '#fff';
+                    document.getElementById('adventure-status').innerText = `Salah! Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon}.`;
                     if (state.lives <= 0) {
                         clearInterval(adventureState.intervalId);
                         adventureState.running = false;
                         document.getElementById('adventure-overlay').classList.remove('show');
                         finish(false);
+                        return;
                     }
                 }
-                if (obs.y >= 100) {
+                if (obs.y >= 110) {
                     obs.done = true;
                     obs.el.remove();
-                    completed += 1;
                 }
             });
-
-            if (adventureState.spawned >= adventureState.maxObstacles && completed >= adventureState.maxObstacles) {
-                completeAdventure();
-            }
         }
 
         function spawnAdventureObstacle(stage) {
@@ -1886,10 +1911,12 @@
             const obstacle = document.createElement('div');
             obstacle.className = `adventure-obstacle adventure-lane-${lane}`;
             obstacle.style.top = '-12%';
-            const obstacleIcons = ['🪵', '🪨', '🚧', '🌵'];
-            obstacle.innerText = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)];
+            const options = [...new Set([adventureState.correctInstrument.icon, ...adventureState.correctInstrument.options])];
+            const icon = options[Math.floor(Math.random() * options.length)];
+            obstacle.innerText = icon;
+            obstacle.dataset.icon = icon;
             stage.appendChild(obstacle);
-            adventureState.obstacles.push({ el: obstacle, lane, y: -12, hit: false, done: false });
+            adventureState.obstacles.push({ el: obstacle, lane, y: -12, hit: false, done: false, icon });
         }
 
         function completeAdventure() {
