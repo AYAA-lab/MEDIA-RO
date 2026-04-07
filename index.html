@@ -1885,19 +1885,10 @@
                         completeAdventure();
                         return;
                     }
-                    state.lives = Math.max(0, state.lives - 1);
-                    document.getElementById('life-icons').innerText = '❤️'.repeat(Math.max(0, state.lives));
                     playSound(130, 0.2);
                     obs.el.style.background = '#f87171';
                     obs.el.style.color = '#fff';
-                    document.getElementById('adventure-status').innerText = `Salah! Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon}.`;
-                    if (state.lives <= 0) {
-                        clearInterval(adventureState.intervalId);
-                        adventureState.running = false;
-                        document.getElementById('adventure-overlay').classList.remove('show');
-                        finish(false);
-                        return;
-                    }
+                    document.getElementById('adventure-status').innerText = `Salah! Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon}. Coba lagi.`;
                 }
                 if (obs.y >= 110) {
                     obs.done = true;
