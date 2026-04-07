@@ -1938,7 +1938,10 @@
         }
 
         function proceedToQuiz() {
-            document.getElementById('adventure-overlay').classList.remove('show');
+            const overlay = document.getElementById('adventure-overlay');
+            overlay.classList.remove('show');
+            overlay.classList.add('hidden');
+            document.getElementById('area-preview-overlay').classList.remove('show');
             showQuiz();
         }
 
