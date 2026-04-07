@@ -275,156 +275,41 @@
         }
 
         .monopoly-board {
-            position: relative;
-            width: min(85vh, 95vw);
-            height: min(55vh, 70vw);
-            aspect-ratio: 1.3 / 1;
-            border-radius: 25px;
-            overflow: hidden;
-            background: linear-gradient(180deg, #87c9ff 0%, #73d5fb 35%, #d7f2ff 100%);
-            border: clamp(4px, 1vw, 6px) solid #FFCB99;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.35), 0 10px 40px rgba(0,0,0,0.4);
-            padding: clamp(12px, 2vw, 16px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .map-grid {
-            width: 100%;
-            height: 100%;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            place-items: center;
-            gap: clamp(6px, 1.2vw, 10px);
+            grid-template-rows: repeat(5, 1fr);
+            gap: clamp(4px, 1vw, 6px);
+            background: #E8F4F8;
+            padding: clamp(8px, 2vw, 12px);
+            border-radius: 15px;
+            width: min(85vh, 95vw);
+            height: min(85vh, 95vw);
+            aspect-ratio: 1 / 1;
             position: relative;
+            border: clamp(4px, 1vw, 6px) solid #FFCB99;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .map-cell {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 80px;
-            min-width: 80px;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.45);
-            border: 2px dashed rgba(255,255,255,0.55);
-            box-shadow: inset 0 0 15px rgba(255,255,255,0.7), 0 5px 15px rgba(0,0,0,0.12);
-            overflow: hidden;
+        .tile {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: clamp(2px, 0.5vw, 3px) solid #B8D4E8;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: flex-end;
-            align-items: center;
-            padding: clamp(10px, 1.2vw, 14px);
-            text-align: center;
-        }
-
-        .map-cell.active-cell {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18), inset 0 0 15px rgba(96, 165, 250, 0.25);
-            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(186, 230, 253, 0.95));
-        }
-
-        .map-cell::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top left, rgba(255,255,255,0.7), transparent 35%);
-            pointer-events: none;
-        }
-
-        .map-cell.path-cell {
-            background: linear-gradient(180deg, rgba(255,255,255,0.90), rgba(219,240,255,0.9));
-            border: 2px solid rgba(57, 112, 184, 0.35);
-        }
-
-        .map-cell.road-cell {
-            background: linear-gradient(180deg, rgba(255,255,255,0.80), rgba(209, 237, 250, 0.8));
-        }
-
-        .map-cell.start-cell {
-            background: linear-gradient(180deg, #FFF8D9 0%, #FBE3A1 100%);
-            border-color: #f59e0b;
-        }
-
-        .map-cell.goal-cell {
-            background: linear-gradient(180deg, #fbcfe8 0%, #fde68a 100%);
-            border-color: #fb7185;
-        }
-
-        .map-cell.obstacle-cell {
-            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(239, 246, 255, 0.92));
-            border-color: #38bdf8;
-        }
-
-        .map-cell .cell-label {
+            font-weight: 800;
             position: relative;
-            z-index: 2;
-            font-size: clamp(9px, 1.5vw, 12px);
-            line-height: 1.2;
-            color: #0f172a;
-            font-weight: 700;
-            margin-top: auto;
-        }
-
-        .map-cell .obstacle-icon {
-            position: absolute;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(32px, 7vw, 40px);
-            height: clamp(32px, 7vw, 40px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(16px, 3vw, 20px);
-        }
-
-        .map-cell.completed {
-            background: rgba(163, 230, 53, 0.18);
-            border-color: #84cc16;
-        }
-
-        .player-token {
-            position: absolute;
-            width: clamp(80px, 15vw, 110px);
-            height: clamp(80px, 15vw, 110px);
-            max-width: 14%;
-            max-height: 14%;
-            z-index: 50;
-            transition: all 0.25s ease;
-            pointer-events: none;
-            top: 0;
-            left: 0;
-            transform: translate(-50%, -50%);
-        }
-
-        .control-group {
-            position: absolute;
-            bottom: clamp(16px, 4vw, 32px);
-            left: clamp(16px, 4vw, 32px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 60;
-        }
-
-        .btn-dir-container {
-            display: grid;
-            grid-template-columns: repeat(3, clamp(54px, 10vw, 66px));
-            grid-template-rows: repeat(3, clamp(54px, 10vw, 66px));
-            gap: clamp(8px, 2vw, 12px);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn-dir.empty {
-            opacity: 0;
-            pointer-events: none;
-            background: transparent;
-            border: none;
-            box-shadow: none;
+            padding: clamp(4px, 1vw, 6px) clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 8px) clamp(4px, 1vw, 6px);
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: clamp(9px, 1.5vw, 11px);
+            line-height: 1.05;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            min-height: clamp(50px, 10vw, 60px);
+            word-break: break-word;
         }
 
         .tile:hover {
@@ -1221,18 +1106,16 @@
     <!-- GAME BOARD -->
     <main class="game-main">
         <div id="board" class="monopoly-board">
-            <div class="map-grid" id="map-grid"></div>
+            <div class="center-area">
+                <img src="https://raw.githubusercontent.com/riyanarahman320/26/main/BANDUNG.png" alt="Resonance Odyssey" class="center-image">
+            </div>
             <div id="player-token" class="player-token hidden"></div>
         </div>
 
-        <!-- Control Button -->
+        <!-- Control Button (kanan saja) -->
         <div id="move-btn-ctrl" class="control-group hidden">
             <div class="btn-dir-container">
-                <button class="btn-dir" id="btn-up" onclick="handleMove('up')">↑</button>
-                <button class="btn-dir" id="btn-left" onclick="handleMove('left')">◀</button>
-                <button class="btn-dir empty" disabled></button>
-                <button class="btn-dir" id="btn-right" onclick="handleMove('right')">▶</button>
-                <button class="btn-dir" id="btn-down" onclick="handleMove('down')">↓</button>
+                <button class="btn-dir" id="btn-right" onclick="handleRight()">▶</button>
             </div>
         </div>
     </main>
@@ -1317,44 +1200,26 @@
             15: { q: "Kesenian Aceh yang memadukan vokal, tepuk tangan, dan bantal kecil sebagai perkusi disebut?", a: ["Didong", "Saman", "Seudati", "Rapa'i"], correct: 0 }
         };
 
-        const adventureNodes = [
-            { id: 0, row: 3, col: 1, name: 'Mulai', type: 'start' },
-            { id: 1, row: 3, col: 2, name: 'Jalan Raya', type: 'road' },
-            { id: 2, row: 3, col: 3, name: 'Rintangan Angklung', type: 'obstacle', questionId: 2 },
-            { id: 3, row: 3, col: 4, name: 'Jembatan Awan', type: 'road' },
-            { id: 4, row: 3, col: 5, name: 'Tantangan Gamelan', type: 'obstacle', questionId: 4 },
-            { id: 5, row: 2, col: 5, name: 'Hutan Nusantara', type: 'road' },
-            { id: 6, row: 1, col: 5, name: 'Tantangan Jogja', type: 'obstacle', questionId: 6 },
-            { id: 7, row: 1, col: 4, name: 'Lembah Angin', type: 'road' },
-            { id: 8, row: 1, col: 3, name: 'Rintangan Bali', type: 'obstacle', questionId: 7 },
-            { id: 9, row: 1, col: 2, name: 'Kampung Penuh Warna', type: 'road' },
-            { id: 10, row: 1, col: 1, name: 'Gerbang Akhir', type: 'goal' }
+        const gridCoords = [
+            [1,1], [1,2], [1,3], [1,4], [1,5], 
+            [2,5], [3,5], [4,5], [5,5], 
+            [5,4], [5,3], [5,2], [5,1], 
+            [4,1], [3,1], [2,1]
         ];
-
-        const mapConnections = {
-            0: [1],
-            1: [0,2],
-            2: [1,3],
-            3: [2,4],
-            4: [3,5],
-            5: [4,6],
-            6: [5,7],
-            7: [6,8],
-            8: [7,9],
-            9: [8,10],
-            10: [9]
-        };
 
         let state = {
             playerName: '',
             schoolName: '',
-            currentNode: 0,
+            idx: 0,
             lives: 5,
             charId: '',
             active: false,
             isMoving: false,
-            visitedObstacles: new Set(),
+            visited: new Set(),
             currentQuiz: null,
+            autoMode: false,
+            autoPaused: false,
+            autoTimer: null,
             currentAudio: null,
             answers: [] // Array untuk track jawaban per soal: {questionId, correct, answer}
         };
@@ -1440,8 +1305,7 @@
         function finalStart(charId) {
             state.charId = charId;
             state.active = true;
-            state.currentNode = 0;
-            state.visitedObstacles.clear();
+            state.visited.add(0);
             
             document.getElementById('screen-char').classList.add('hidden');
             document.getElementById('top-status').classList.remove('hidden');
@@ -1459,126 +1323,134 @@
         }
 
         function initBoard() {
-            const grid = document.getElementById('map-grid');
-            grid.innerHTML = '';
+            const board = document.getElementById('board');
+            const defaultImage = 'https://raw.githubusercontent.com/AYAA-lab/resonance-odyssey/0e31389538a02c42684025cbc04d8fb04add8b76/JAKARTA.png';
+            
+            cityData.forEach((city, i) => {
+                if (i === 0) return;
+                
+                    const tile = document.createElement('div');
+                    tile.className = `tile ${city.side === 'corner' ? 'corner-tile' : city.side}`;
+                    tile.id = `tile-${i}`;
+                    tile.style.gridRow = gridCoords[i][0];
+                    tile.style.gridColumn = gridCoords[i][1];
+                    let inner = `<span style="z-index: 10;">${city.name}</span>`;
 
-            adventureNodes.forEach(node => {
-                const cell = document.createElement('div');
-                cell.className = 'map-cell';
-                cell.dataset.nodeId = node.id;
-                if (node.type === 'start') cell.classList.add('start-cell');
-                if (node.type === 'goal') cell.classList.add('goal-cell');
-                if (node.type === 'road') cell.classList.add('road-cell');
-                if (node.type === 'obstacle') cell.classList.add('obstacle-cell');
-                cell.style.gridRow = node.row;
-                cell.style.gridColumn = node.col;
+                    // Set background image - use city.image if available, otherwise use default JAKARTA.png
+                    const imageUrl = city.image || defaultImage;
+                    tile.style.backgroundImage = `url(${imageUrl})`;
 
-                if (node.type === 'obstacle') {
-                    const icon = document.createElement('div');
-                    icon.className = 'obstacle-icon';
-                    icon.innerText = '⛰️';
-                    cell.appendChild(icon);
-                }
-
-                const label = document.createElement('div');
-                label.className = 'cell-label';
-                label.innerText = node.name;
-                cell.appendChild(label);
-                grid.appendChild(cell);
+                    tile.innerHTML = inner;
+                    board.appendChild(tile);
             });
         }
 
         function updateTokenPos() {
             const token = document.getElementById('player-token');
-            const node = adventureNodes[state.currentNode];
-            const cell = document.querySelector(`.map-cell[data-node-id='${node.id}']`);
-            if (!cell) return;
-
-            const x = cell.offsetLeft + cell.clientWidth * 0.5;
-            const y = cell.offsetTop + cell.clientHeight * 0.45;
-            token.style.left = `${x}px`;
-            token.style.top = `${y}px`;
-            document.getElementById('life-icons').innerText = '❤️'.repeat(Math.max(0, state.lives));
-            document.getElementById('current-loc').innerText = node.name;
-
-            document.querySelectorAll('.map-cell').forEach(c => {
-                c.classList.remove('active-cell');
-                if (c.classList.contains('obstacle-cell')) {
-                    const id = Number(c.dataset.nodeId);
-                    c.classList.toggle('completed', state.visitedObstacles.has(id));
-                }
-            });
-
-            cell.classList.add('active-cell');
-        }
-
-        function getTargetNodeId(currentId, dir) {
-            const current = adventureNodes.find(node => node.id === currentId);
-            if (!current) return null;
-
-            let target = null;
-            if (dir === 'right') {
-                target = adventureNodes.find(node => node.row === current.row && node.col === current.col + 1);
+            const coord = gridCoords[state.idx];
+            
+            const centerX = (coord[1] - 0.5) * 20;
+            const centerY = (coord[0] - 0.5) * 20;
+            
+            token.style.left = `${centerX}%`;
+            token.style.top = `${centerY}%`;
+            
+            document.getElementById('life-icons').innerText = "❤️".repeat(Math.max(0, state.lives));
+            document.getElementById('current-loc').innerText = cityData[state.idx].name;
+            
+            document.querySelectorAll('.tile').forEach(t => t.style.boxShadow = '');
+            const currentTile = document.getElementById(`tile-${state.idx}`);
+            if (currentTile) {
+                currentTile.style.boxShadow = '0 0 15px #ec4899, inset 0 0 15px rgba(236, 72, 153, 0.3)';
             }
-            if (dir === 'left') {
-                target = adventureNodes.find(node => node.row === current.row && node.col === current.col - 1);
-            }
-            if (dir === 'up') {
-                target = adventureNodes.find(node => node.col === current.col && node.row === current.row - 1);
-            }
-            if (dir === 'down') {
-                target = adventureNodes.find(node => node.col === current.col && node.row === current.row + 1);
-            }
-
-            if (!target) return null;
-            return mapConnections[currentId].includes(target.id) ? target.id : null;
         }
 
         function handleMove(dir) {
             if (!state.active || state.isMoving) return;
-            const nextId = getTargetNodeId(state.currentNode, dir);
-            if (nextId === null) return;
+            let move = 0;
+            const i = state.idx;
 
+            // Top row (0-3): normal horizontal movement
+            if (i >= 0 && i < 4) {
+                if (dir === 'right') move = 1;
+                if (dir === 'left') move = -1;
+            }
+            // Corner: Jogja (index 4) - top right corner
+            // Bisa gerak LEFT (ke Cirebon) atau DOWN (ke Solo)
+            else if (i === 4) {
+                if (dir === 'left') move = -1;   // Ke Cirebon (index 3)
+                if (dir === 'down') move = 1;    // Ke Solo (index 5)
+            }
+            // Right side (5-7): normal vertical movement
+            else if (i > 4 && i < 8) {
+                if (dir === 'down') move = 1;
+                if (dir === 'up') move = -1;
+            }
+            // Corner: Lombok (index 8) - right bottom corner
+            // Bisa gerak UP (ke Bali) atau LEFT (ke Makassar)
+            else if (i === 8) {
+                if (dir === 'up') move = -1;    // Ke Bali (index 7)
+                if (dir === 'left') move = 1;   // Ke Makassar (index 9)
+            }
+            // Bottom row (9-11): horizontal movement (reversed)
+            else if (i > 8 && i < 12) {
+                if (dir === 'left') move = 1;
+                if (dir === 'right') move = -1;
+            }
+            // Corner: Ternate (index 12) - bottom left corner
+            // Bisa gerak RIGHT (ke Ambon) atau UP (ke Papua)
+            else if (i === 12) {
+                if (dir === 'right') move = -1;  // Ke Ambon (index 11)
+                if (dir === 'up') move = 1;      // Ke Papua (index 13)
+            }
+            // Left side (13-15): vertical movement (reversed)
+            else if (i >= 13) {
+                if (dir === 'up') move = 1;
+                if (dir === 'down') move = -1;
+            }
+
+            if (move === 0) return;
             state.isMoving = true;
-            state.currentNode = nextId;
+            state.idx = (state.idx + move + 16) % 16;
             updateTokenPos();
             updateControlButtons();
-            playTravelMusic();
+
+            // Putar musik perjalanan ke kota ini
+            playTravelMusic(state.idx);
 
             setTimeout(() => {
-                const node = adventureNodes[state.currentNode];
-                if (node.type === 'obstacle' && !state.visitedObstacles.has(node.id)) {
+                if (!state.visited.has(state.idx)) {
+                    state.visited.add(state.idx);
                     showAreaPreview();
-                } else if (node.type === 'goal') {
-                    state.isMoving = false;
-                    finish(true);
                 } else {
                     state.isMoving = false;
                 }
-            }, 300);
+            }, TRAVEL_DURATION);
         }
 
         function showQuiz() {
+            // Hentikan musik perjalanan saat quiz muncul
             if (state.currentAudio) {
                 state.currentAudio.pause();
                 state.currentAudio.currentTime = 0;
             }
-
-            const currentNode = adventureNodes[state.currentNode];
-            state.currentQuiz = cityQuestions[currentNode.questionId];
-
+            
+            state.currentQuiz = cityQuestions[state.idx];
+            
             if (!state.currentQuiz) {
                 state.isMoving = false;
                 return;
             }
 
             const overlay = document.getElementById('quiz-overlay');
-            document.getElementById('quiz-header').innerText = `TANTANGAN PETUALANGAN: ${currentNode.name}`;
+            document.getElementById('quiz-header').innerText = `TANTANGAN MUSIK: ${cityData[state.idx].name}`;
             document.getElementById('quiz-question').innerText = state.currentQuiz.q;
+            
             document.getElementById('quiz-feedback-box').classList.remove('show');
-
+            
             const container = document.getElementById('quiz-options');
             container.innerHTML = '';
+            
             state.currentQuiz.a.forEach((opt, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'quiz-opt-btn';
@@ -1586,112 +1458,77 @@
                 btn.onclick = () => checkAns(idx === state.currentQuiz.correct);
                 container.appendChild(btn);
             });
-
+            
+            // pause auto-walk while quiz is shown
+            state.autoPaused = true;
             overlay.classList.add('show');
         }
 
         function checkAns(correct) {
             document.querySelectorAll('.quiz-opt-btn').forEach(b => b.disabled = true);
-
-            const currentNode = adventureNodes[state.currentNode];
+            
+            // Record jawaban
+            const questionId = state.idx;
             state.answers.push({
-                questionId: currentNode.questionId,
-                cityName: currentNode.name,
+                questionId: questionId,
+                cityName: cityData[questionId].name,
                 correct: correct,
                 timestamp: new Date().toISOString()
             });
-
+            
             const feedbackBox = document.getElementById('quiz-feedback-box');
             const icon = document.getElementById('feedback-icon');
             const title = document.getElementById('feedback-title');
             const message = document.getElementById('feedback-message');
-
+            
             feedbackBox.classList.add('show');
+
             if (correct) {
                 playSound(523.25, 0.1);
-                icon.innerText = '✅';
-                title.innerText = 'BENAR!';
+                icon.innerText = "✅";
+                title.innerText = "BENAR!";
                 title.style.color = '#22c55e';
-                message.innerText = 'Kamu berhasil melewati rintangan ini.';
-                message.style.color = '#0f766e';
+                message.innerText = "Luar biasa! Pengetahuan musikmu sangat luas.";
+                message.style.color = '#667eea';
             } else {
                 playSound(98, 0.2);
                 state.lives--;
-                icon.innerText = '❌';
-                title.innerText = 'SALAH!';
+                icon.innerText = "❌";
+                title.innerText = "SALAH!";
                 title.style.color = '#dc2626';
-                message.innerText = `Jawaban benar: ${state.currentQuiz.a[state.currentQuiz.correct]}`;
+                message.innerText = `Jawaban yang benar adalah: ${state.currentQuiz.a[state.currentQuiz.correct]}`;
                 message.style.color = '#dc2626';
-                document.getElementById('board').classList.add('shake');
-                setTimeout(() => document.getElementById('board').classList.remove('shake'), 400);
+                
+                const board = document.getElementById('board');
+                board.classList.add('shake');
+                setTimeout(() => board.classList.remove('shake'), 400);
             }
 
             setTimeout(() => {
                 document.getElementById('quiz-overlay').classList.remove('show');
                 state.isMoving = false;
-                if (!correct) {
-                    if (state.lives <= 0) {
-                        finish(false);
-                        return;
-                    }
+                if (state.lives <= 0) {
+                    finish(false);
+                } else if (state.visited.size === cityData.length) {
+                    finish(true);
                 }
-
-                if (state.currentNode !== 10) {
-                    state.visitedObstacles.add(state.currentNode);
-                }
-
                 updateTokenPos();
+                // resume auto if it was running before quiz
+                if (state.autoMode) {
+                    state.autoPaused = false;
+                    if (state.autoTimer) clearTimeout(state.autoTimer);
+                    state.autoTimer = setTimeout(autoStep, 300);
+                }
                 updateControlButtons();
-            }, 1600);
+            }, 2000);
         }
-
-        function playTravelMusic() {
-            if (state.currentAudio) {
-                state.currentAudio.pause();
-                state.currentAudio.currentTime = 0;
-            }
-        }
-
-        function showAreaPreview() {
-            const node = adventureNodes[state.currentNode];
-            const overlay = document.getElementById('area-preview-overlay');
-            document.getElementById('preview-image').src = DEFAULT_PREVIEW_IMAGE;
-            document.getElementById('preview-title').innerText = node.name;
-            document.getElementById('preview-subtitle').innerText = `Kamu tiba di rintangan baru. Jawab pertanyaan agar karakter bisa maju!`;
-            overlay.classList.add('show');
-        }
-
-        function closeAreaPreview() {
-            document.getElementById('area-preview-overlay').classList.remove('show');
-            showQuiz();
-        }
-
-        function updateControlButtons() {
-            const directions = ['up', 'down', 'left', 'right'];
-            directions.forEach(dir => {
-                const button = document.getElementById(`btn-${dir}`);
-                if (!button) return;
-                const targetId = getTargetNodeId(state.currentNode, dir);
-                button.disabled = !state.active || state.isMoving || targetId === null;
-            });
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key.startsWith('Arrow')) {
-                e.preventDefault();
-                const dir = e.key.replace('Arrow', '').toLowerCase();
-                handleMove(dir);
-            }
-        });
-
-        initBoard();
 
         function sendGameDataToSpreadsheet(win) {
             // Ganti URL ini dengan URL Google Forms Anda
             const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScqZ0E6JF0yOCgyU9CdywAkMdGo-cRWtDjYaM8eJa3ZPbBjig/formResponse';
-
+            
             const formData = new FormData();
-
+            
             // Data dasar siswa
             formData.append('entry.595722973', state.playerName); // Nama Siswa
             formData.append('entry.725280792', state.schoolName); // Nama Sekolah
@@ -1701,13 +1538,13 @@
             formData.append('entry.1655330258', state.answers.filter(a => a.correct).length); // Total Benar
             formData.append('entry.1984621075', state.answers.filter(a => !a.correct).length); // Total Salah
             formData.append('entry.439573770', new Date().toLocaleString('id-ID')); // Waktu Selesai
-
+            
             // Detail jawaban per soal (dalam format JSON untuk satu field)
             const answersDetail = state.answers.map(answer => 
                 `${answer.cityName}: ${answer.correct ? 'Benar' : 'Salah'}`
             ).join(' | ');
             formData.append('entry.674416243', answersDetail); // Detail Jawaban
-
+            
             fetch(formUrl, {
                 method: 'POST',
                 body: formData,
@@ -1739,17 +1576,92 @@
             overlay.classList.add('show');
         }
 
+        function handleRight() {
+            // toggle auto mode: if already auto, stop; otherwise start auto-walk clockwise
+            if (state.autoMode) {
+                stopAuto();
+            } else {
+                startAuto();
+            }
+        }
+
+        function playTravelMusic(cityIdx) {
+            // Stop musik yang sedang dimainkan
+            if (state.currentAudio) {
+                state.currentAudio.pause();
+                state.currentAudio.currentTime = 0;
+            }
+            
+            // Jika ada musik untuk kota ini, putar
+            if (cityIdx < cityData.length && cityData[cityIdx].music) {
+                state.currentAudio = new Audio(cityData[cityIdx].music);
+                state.currentAudio.volume = 0.5; // volume 50%
+                state.currentAudio.play().catch(e => console.log('Musik tidak bisa diputar:', e));
+            }
+        }
+
+        function startAuto() {
+            if (state.autoMode) return;
+            state.autoMode = true;
+            state.autoPaused = false;
+            state.autoTimer = setTimeout(autoStep, 300);
+            updateControlButtons();
+        }
+
+        function stopAuto() {
+            state.autoMode = false;
+            state.autoPaused = false;
+            if (state.autoTimer) {
+                clearTimeout(state.autoTimer);
+                state.autoTimer = null;
+            }
+            updateControlButtons();
+        }
+
+        function autoStep() {
+            if (!state.autoMode || state.autoPaused) return;
+            const lastIdx = cityData.length - 1;
+            if (state.idx === lastIdx) {
+                stopAuto();
+                return;
+            }
+
+            state.isMoving = true;
+            state.idx = (state.idx + 1) % cityData.length;
+            updateTokenPos();
+            updateControlButtons();
+
+            // Putar musik perjalanan
+            playTravelMusic(state.idx);
+
+            state.autoTimer = setTimeout(() => {
+                if (!state.visited.has(state.idx)) {
+                    state.visited.add(state.idx);
+                    state.autoPaused = true;
+                    showAreaPreview();
+                } else {
+                    state.isMoving = false;
+                    if (state.autoMode && !state.autoPaused && state.idx !== lastIdx) {
+                        state.autoTimer = setTimeout(autoStep, 300);
+                    } else if (state.idx === lastIdx) {
+                        stopAuto();
+                    }
+                }
+            }, TRAVEL_DURATION);
+        }
+
         function showAreaPreview() {
-            const node = adventureNodes[state.currentNode];
+            const city = cityData[state.idx] || {};
             const overlay = document.getElementById('area-preview-overlay');
             const image = document.getElementById('preview-image');
             const title = document.getElementById('preview-title');
             const subtitle = document.getElementById('preview-subtitle');
 
-            image.src = DEFAULT_PREVIEW_IMAGE;
-            title.innerText = node.name;
-            subtitle.innerText = `Kamu telah sampai di rintangan baru. Persiapkan dirimu untuk tantangan berikutnya!`;
+            image.src = city.image || DEFAULT_PREVIEW_IMAGE;
+            title.innerText = city.name || 'Wilayah Baru';
+            subtitle.innerText = `Kamu telah sampai di ${city.name}. Siapkan dirimu untuk tantangan musik berikutnya!`;
 
+            state.autoPaused = true;
             overlay.classList.add('show');
         }
 
@@ -1759,6 +1671,20 @@
             showQuiz();
         }
 
+        function updateControlButtons() {
+            const btn = document.getElementById('btn-right');
+            if (!btn) return;
+            const i = state.idx;
+            // right is valid on top row and bottom row
+            const canRight = (i >= 0 && i <= 4) || (i >= 9 && i <= 12);
+            btn.disabled = !state.active || state.isMoving || !canRight;
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight") handleMove('right');
+        });
+
+        initBoard();
     </script>
 </body>
 </html>
