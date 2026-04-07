@@ -620,33 +620,6 @@
             z-index: 10;
         }
 
-        .adventure-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: clamp(10px, 3vw, 16px);
-            margin-top: clamp(16px, 3vw, 20px);
-        }
-
-        .adventure-control-btn {
-            width: clamp(48px, 10vw, 56px);
-            height: clamp(48px, 10vw, 56px);
-            border-radius: 50%;
-            background: linear-gradient(135deg, #7EC8E3 0%, #A8D8EA 100%);
-            color: #2C5F7F;
-            border: 2px solid #5EB3D6;
-            font-size: clamp(18px, 4vw, 24px);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-
-        .adventure-control-btn:hover {
-            transform: translateY(-2px);
-        }
-
         .adventure-obstacle {
             position: absolute;
             width: clamp(42px, 10vw, 56px);
@@ -1268,10 +1241,6 @@
                 <div id="adventure-player" class="adventure-player">🧍</div>
             </div>
             <p id="adventure-status" style="margin-top: 15px; font-size: clamp(12px, 2.5vw, 14px); color: #5EB3D6;">Tekan MULAI untuk bergerak dan tangkap alat musik yang benar.</p>
-            <div id="adventure-controls" class="adventure-controls hidden">
-                <button class="adventure-control-btn" onclick="moveAdventurePlayer('left')">◀</button>
-                <button class="adventure-control-btn" onclick="moveAdventurePlayer('right')">▶</button>
-            </div>
             <button id="adventure-start-btn" class="btn-gold" onclick="startAdventure()">MULAI PETUALANGAN</button>
             <button id="adventure-continue-btn" class="btn-gold hidden" onclick="proceedToQuiz()">LANJUT KE SOAL</button>
         </div>
@@ -1888,7 +1857,6 @@
             document.getElementById('adventure-status').innerText = `Tantangan dimulai. Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon} yang jatuh dari atas.`;
             document.getElementById('adventure-start-btn').classList.add('hidden');
             document.getElementById('adventure-continue-btn').classList.add('hidden');
-            document.getElementById('adventure-controls').classList.remove('hidden');
 
             const player = document.getElementById('adventure-player');
             player.style.left = '50%';
@@ -1896,6 +1864,10 @@
 
             const stage = document.getElementById('adventure-stage');
             stage.querySelectorAll('.adventure-obstacle').forEach(el => el.remove());
+
+            // Add mouse and touch controls
+            stage.addEventListener('mousemove', handleMouseMove);
+            stage.addEventListener('touchmove', handleTouchMove, { passive: false });
 
             if (adventureState.intervalId) {
                 clearInterval(adventureState.intervalId);
@@ -1911,6 +1883,30 @@
             } else if (direction === 'right') {
                 adventureState.playerPos = Math.min(90, adventureState.playerPos + step);
             }
+            const player = document.getElementById('adventure-player');
+            player.style.left = `${adventureState.playerPos}%`;
+        }
+
+        function handleMouseMove(e) {
+            if (!adventureState.running) return;
+            const stage = document.getElementById('adventure-stage');
+            const rect = stage.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            adventureState.playerPos = Math.max(10, Math.min(90, percentage));
+            const player = document.getElementById('adventure-player');
+            player.style.left = `${adventureState.playerPos}%`;
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!adventureState.running) return;
+            const stage = document.getElementById('adventure-stage');
+            const rect = stage.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            adventureState.playerPos = Math.max(10, Math.min(90, percentage));
             const player = document.getElementById('adventure-player');
             player.style.left = `${adventureState.playerPos}%`;
         }
@@ -1976,11 +1972,19 @@
             adventureState.finished = true;
             adventureState.running = false;
             clearInterval(adventureState.intervalId);
+            // Remove event listeners
+            const stage = document.getElementById('adventure-stage');
+            stage.removeEventListener('mousemove', handleMouseMove);
+            stage.removeEventListener('touchmove', handleTouchMove);
             document.getElementById('adventure-status').innerText = 'Selamat! Kamu berhasil melewati tantangan. Tekan tombol di bawah untuk lanjut ke soal.';
             document.getElementById('adventure-continue-btn').classList.remove('hidden');
         }
 
         function proceedToQuiz() {
+            // Remove event listeners if still attached
+            const stage = document.getElementById('adventure-stage');
+            stage.removeEventListener('mousemove', handleMouseMove);
+            stage.removeEventListener('touchmove', handleTouchMove);
             const overlay = document.getElementById('adventure-overlay');
             overlay.classList.remove('show');
             overlay.classList.add('hidden');
