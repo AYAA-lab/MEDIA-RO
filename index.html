@@ -1944,8 +1944,7 @@
                         obs.el.style.background = '#f87171';
                         obs.el.style.color = '#fff';
                         document.getElementById('adventure-status').innerText = `Salah! Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon}. Coba lagi.`;
-                        obs.done = true;
-                        setTimeout(() => obs.el.remove(), 200);
+                        obs.hit = true;
                     }
                 }
                 if (obs.y >= 110) {
