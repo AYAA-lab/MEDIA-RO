@@ -1680,12 +1680,6 @@
                     state.autoPaused = false;
                     if (state.autoTimer) clearTimeout(state.autoTimer);
                     state.autoTimer = setTimeout(autoStep, 300);
-                } else if (state.active && state.lives > 0 && state.visited.size < cityData.length) {
-                    setTimeout(() => {
-                        if (state.active && !state.isMoving) {
-                            moveToNextTile();
-                        }
-                    }, 1000);
                 }
                 updateControlButtons();
             }, 2000);
