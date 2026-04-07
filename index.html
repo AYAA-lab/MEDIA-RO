@@ -1572,6 +1572,24 @@
             }, TRAVEL_DURATION);
         }
 
+        function moveToNextTile() {
+            if (!state.active || state.isMoving) return;
+            state.isMoving = true;
+            state.idx = (state.idx + 1) % cityData.length;
+            updateTokenPos();
+            updateControlButtons();
+            playTravelMusic(state.idx);
+
+            setTimeout(() => {
+                if (!state.visited.has(state.idx)) {
+                    state.visited.add(state.idx);
+                    showAreaPreview();
+                } else {
+                    state.isMoving = false;
+                }
+            }, TRAVEL_DURATION);
+        }
+
         function showQuiz() {
             // Hentikan musik perjalanan saat quiz muncul
             if (state.currentAudio) {
@@ -1662,6 +1680,12 @@
                     state.autoPaused = false;
                     if (state.autoTimer) clearTimeout(state.autoTimer);
                     state.autoTimer = setTimeout(autoStep, 300);
+                } else if (state.active && state.lives > 0 && state.visited.size < cityData.length) {
+                    setTimeout(() => {
+                        if (state.active && !state.isMoving) {
+                            moveToNextTile();
+                        }
+                    }, 1000);
                 }
                 updateControlButtons();
             }, 2000);
