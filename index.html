@@ -1236,8 +1236,9 @@
                 <div class="road-tree tree-right tree-right-2">🌴</div>
                 <div id="adventure-player" class="adventure-player">🧍</div>
             </div>
-            <p style="margin-top: 15px; font-size: clamp(12px, 2.5vw, 14px); color: #5EB3D6;">Gunakan tombol arah kiri dan kanan untuk melewati jalan dan menghindari rintangan.</p>
-            <button class="btn-gold" onclick="startAdventure()">MULAI PETUALANGAN</button>
+            <p id="adventure-status" style="margin-top: 15px; font-size: clamp(12px, 2.5vw, 14px); color: #5EB3D6;">Gunakan tombol arah kiri dan kanan untuk melewati jalan dan menghindari rintangan.</p>
+            <button id="adventure-start-btn" class="btn-gold" onclick="startAdventure()">MULAI PETUALANGAN</button>
+            <button id="adventure-continue-btn" class="btn-gold hidden" onclick="proceedToQuiz()">LANJUT KE SOAL</button>
         </div>
     </div>
 
@@ -1320,7 +1321,8 @@
             nextSpawn: 0,
             spawned: 0,
             maxObstacles: 5,
-            intervalId: null
+            intervalId: null,
+            finished: false
         };
 
         const gridCoords = [
@@ -1787,6 +1789,9 @@
         function openAdventureOverlay() {
             const overlay = document.getElementById('adventure-overlay');
             document.getElementById('adventure-subtitle').innerText = `Mini-game petualangan dimulai di ${cityData[state.idx].name}. Gunakan panah kiri dan kanan untuk melewati jalan dengan pohon dan rintangan.`;
+            document.getElementById('adventure-status').innerText = 'Tekan tombol mulai untuk memulai perjalanan dan melewati rintangan.';
+            document.getElementById('adventure-start-btn').classList.remove('hidden');
+            document.getElementById('adventure-continue-btn').classList.add('hidden');
             document.getElementById('area-preview-overlay').classList.remove('show');
             overlay.classList.remove('hidden');
             overlay.classList.add('show');
@@ -1802,7 +1807,12 @@
             adventureState.obstacles = [];
             adventureState.nextSpawn = 0;
             adventureState.spawned = 0;
+            adventureState.finished = false;
             adventureState.maxObstacles = 5;
+
+            document.getElementById('adventure-status').innerText = 'Tantangan dimulai. Arahkan karakter melewati rintangan sampai garis finish.';
+            document.getElementById('adventure-start-btn').classList.add('hidden');
+            document.getElementById('adventure-continue-btn').classList.add('hidden');
 
             const player = document.getElementById('adventure-player');
             player.style.left = '50%';
@@ -1867,10 +1877,7 @@
             });
 
             if (adventureState.spawned >= adventureState.maxObstacles && completed >= adventureState.maxObstacles) {
-                clearInterval(adventureState.intervalId);
-                adventureState.running = false;
-                document.getElementById('adventure-overlay').classList.remove('show');
-                showQuiz();
+                completeAdventure();
             }
         }
 
@@ -1883,6 +1890,20 @@
             obstacle.innerText = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)];
             stage.appendChild(obstacle);
             adventureState.obstacles.push({ el: obstacle, lane, y: -12, hit: false, done: false });
+        }
+
+        function completeAdventure() {
+            if (adventureState.finished) return;
+            adventureState.finished = true;
+            adventureState.running = false;
+            clearInterval(adventureState.intervalId);
+            document.getElementById('adventure-status').innerText = 'Selamat! Kamu berhasil melewati tantangan. Tekan tombol di bawah untuk lanjut ke soal.';
+            document.getElementById('adventure-continue-btn').classList.remove('hidden');
+        }
+
+        function proceedToQuiz() {
+            document.getElementById('adventure-overlay').classList.remove('show');
+            showQuiz();
         }
 
         function showAdventureInstructions() {
