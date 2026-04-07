@@ -613,11 +613,38 @@
             width: clamp(44px, 10vw, 56px);
             height: clamp(56px, 12vw, 68px);
             left: 50%;
-            bottom: 14%;
+            bottom: 12%;
             transform: translateX(-50%);
             transition: left 0.15s ease;
             font-size: clamp(28px, 5vw, 38px);
             z-index: 10;
+        }
+
+        .adventure-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(10px, 3vw, 16px);
+            margin-top: clamp(16px, 3vw, 20px);
+        }
+
+        .adventure-control-btn {
+            width: clamp(48px, 10vw, 56px);
+            height: clamp(48px, 10vw, 56px);
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7EC8E3 0%, #A8D8EA 100%);
+            color: #2C5F7F;
+            border: 2px solid #5EB3D6;
+            font-size: clamp(18px, 4vw, 24px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .adventure-control-btn:hover {
+            transform: translateY(-2px);
         }
 
         .adventure-obstacle {
@@ -1240,7 +1267,11 @@
                 <div class="road-tree tree-right tree-right-2">🌴</div>
                 <div id="adventure-player" class="adventure-player">🧍</div>
             </div>
-            <p id="adventure-status" style="margin-top: 15px; font-size: clamp(12px, 2.5vw, 14px); color: #5EB3D6;">Gunakan tombol arah kiri dan kanan untuk melewati jalan dan menghindari rintangan.</p>
+            <p id="adventure-status" style="margin-top: 15px; font-size: clamp(12px, 2.5vw, 14px); color: #5EB3D6;">Tekan MULAI untuk bergerak dan tangkap alat musik yang benar.</p>
+            <div id="adventure-controls" class="adventure-controls hidden">
+                <button class="adventure-control-btn" onclick="moveAdventurePlayer('left')">◀</button>
+                <button class="adventure-control-btn" onclick="moveAdventurePlayer('right')">▶</button>
+            </div>
             <button id="adventure-start-btn" class="btn-gold" onclick="startAdventure()">MULAI PETUALANGAN</button>
             <button id="adventure-continue-btn" class="btn-gold hidden" onclick="proceedToQuiz()">LANJUT KE SOAL</button>
         </div>
@@ -1337,7 +1368,7 @@
         };
         const adventureState = {
             running: false,
-            playerLane: 1,
+            playerPos: 50,
             obstacles: [],
             nextSpawn: 0,
             spawned: 0,
@@ -1846,21 +1877,22 @@
             overlay.classList.add('show');
 
             adventureState.running = true;
-            adventureState.playerLane = 1;
+            adventureState.playerPos = 50;
             adventureState.obstacles = [];
             adventureState.nextSpawn = 0;
             adventureState.spawned = 0;
             adventureState.finished = false;
             adventureState.caught = false;
-            adventureState.maxObstacles = 5;
+            adventureState.maxObstacles = 8;
 
             document.getElementById('adventure-status').innerText = `Tantangan dimulai. Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon} yang jatuh dari atas.`;
             document.getElementById('adventure-start-btn').classList.add('hidden');
             document.getElementById('adventure-continue-btn').classList.add('hidden');
+            document.getElementById('adventure-controls').classList.remove('hidden');
 
             const player = document.getElementById('adventure-player');
             player.style.left = '50%';
-            player.style.bottom = '14%';
+            player.style.bottom = '12%';
 
             const stage = document.getElementById('adventure-stage');
             stage.querySelectorAll('.adventure-obstacle').forEach(el => el.remove());
@@ -1873,44 +1905,50 @@
 
         function moveAdventurePlayer(direction) {
             if (!adventureState.running) return;
+            const step = 10;
             if (direction === 'left') {
-                adventureState.playerLane = Math.max(0, adventureState.playerLane - 1);
+                adventureState.playerPos = Math.max(10, adventureState.playerPos - step);
             } else if (direction === 'right') {
-                adventureState.playerLane = Math.min(2, adventureState.playerLane + 1);
+                adventureState.playerPos = Math.min(90, adventureState.playerPos + step);
             }
             const player = document.getElementById('adventure-player');
-            const leftPosition = [18, 50, 82][adventureState.playerLane];
-            player.style.left = `${leftPosition}%`;
+            player.style.left = `${adventureState.playerPos}%`;
         }
 
         function updateAdventure() {
             if (adventureState.caught || !adventureState.running) return;
             const stage = document.getElementById('adventure-stage');
             adventureState.nextSpawn -= 40;
-            if (adventureState.nextSpawn <= 0) {
+            if (adventureState.nextSpawn <= 0 && adventureState.spawned < adventureState.maxObstacles) {
                 spawnAdventureObstacle(stage);
                 adventureState.spawned += 1;
-                adventureState.nextSpawn = 900;
+                adventureState.nextSpawn = 800;
             }
 
             adventureState.obstacles.forEach(obs => {
                 if (obs.done) return;
-                obs.y += 3.2;
+                obs.y += 3.4;
                 obs.el.style.top = `${obs.y}%`;
-                if (!obs.hit && obs.y > 80 && obs.y < 92 && obs.lane === adventureState.playerLane) {
-                    obs.hit = true;
-                    if (obs.icon === adventureState.correctInstrument.icon) {
-                        obs.el.style.background = '#34d399';
-                        obs.el.style.color = '#ffffff';
-                        playSound(523.25, 0.2);
-                        adventureState.caught = true;
-                        completeAdventure();
-                        return;
+                if (!obs.hit && obs.y > 78 && obs.y < 95) {
+                    const player = document.getElementById('adventure-player');
+                    const playerPos = adventureState.playerPos;
+                    if (Math.abs(obs.x - playerPos) < 12) {
+                        obs.hit = true;
+                        if (obs.icon === adventureState.correctInstrument.icon) {
+                            obs.el.style.background = '#34d399';
+                            obs.el.style.color = '#ffffff';
+                            playSound(523.25, 0.2);
+                            adventureState.caught = true;
+                            completeAdventure();
+                            return;
+                        }
+                        playSound(130, 0.2);
+                        obs.el.style.background = '#f87171';
+                        obs.el.style.color = '#fff';
+                        document.getElementById('adventure-status').innerText = `Salah! Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon}. Coba lagi.`;
+                        obs.done = true;
+                        setTimeout(() => obs.el.remove(), 200);
                     }
-                    playSound(130, 0.2);
-                    obs.el.style.background = '#f87171';
-                    obs.el.style.color = '#fff';
-                    document.getElementById('adventure-status').innerText = `Salah! Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon}. Coba lagi.`;
                 }
                 if (obs.y >= 110) {
                     obs.done = true;
@@ -1920,16 +1958,17 @@
         }
 
         function spawnAdventureObstacle(stage) {
-            const lane = Math.floor(Math.random() * 3);
+            const x = Math.floor(Math.random() * 72) + 14;
             const obstacle = document.createElement('div');
-            obstacle.className = `adventure-obstacle adventure-lane-${lane}`;
+            obstacle.className = 'adventure-obstacle';
             obstacle.style.top = '-12%';
+            obstacle.style.left = `${x}%`;
             const options = [...new Set([adventureState.correctInstrument.icon, ...adventureState.correctInstrument.options])];
             const icon = options[Math.floor(Math.random() * options.length)];
             obstacle.innerText = icon;
             obstacle.dataset.icon = icon;
             stage.appendChild(obstacle);
-            adventureState.obstacles.push({ el: obstacle, lane, y: -12, hit: false, done: false, icon });
+            adventureState.obstacles.push({ el: obstacle, x, y: -12, hit: false, done: false, icon });
         }
 
         function completeAdventure() {
