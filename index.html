@@ -1849,10 +1849,8 @@
             adventureState.playerPos = 50;
             adventureState.obstacles = [];
             adventureState.nextSpawn = 0;
-            adventureState.spawned = 0;
             adventureState.finished = false;
             adventureState.caught = false;
-            adventureState.maxObstacles = 8;
 
             document.getElementById('adventure-status').innerText = `Tantangan dimulai. Tangkap ${adventureState.correctInstrument.name} ${adventureState.correctInstrument.icon} yang jatuh dari atas.`;
             document.getElementById('adventure-start-btn').classList.add('hidden');
@@ -1917,9 +1915,8 @@
             if (adventureState.caught || !adventureState.running) return;
             const stage = document.getElementById('adventure-stage');
             adventureState.nextSpawn -= 40;
-            if (adventureState.nextSpawn <= 0 && adventureState.spawned < adventureState.maxObstacles) {
+            if (adventureState.nextSpawn <= 0) {
                 spawnAdventureObstacle(stage);
-                adventureState.spawned += 1;
                 adventureState.nextSpawn = 800;
             }
 
