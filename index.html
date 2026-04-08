@@ -824,21 +824,26 @@ si<!DOCTYPE html>
             }
 
             .status-bar {
-                flex-direction: row;
+                flex-direction: column;
                 justify-content: center;
+                align-items: stretch;
                 text-align: center;
                 padding: clamp(10px, 2.5vw, 15px);
+                row-gap: clamp(10px, 2vw, 15px);
             }
 
             .status-left {
                 width: 100%;
                 justify-content: center;
+                flex-wrap: wrap;
                 gap: clamp(10px, 2vw, 15px);
             }
 
             .avatar-badge {
                 gap: clamp(4px, 1.5vw, 8px);
                 padding: clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 10px);
+                width: 100%;
+                justify-content: center;
             }
 
             .location-info {
