@@ -1450,6 +1450,27 @@ si<!DOCTYPE html>
             });
         }
 
+        function setPlayerAvatar() {
+            const avatarHtml = charAssets[state.charId] || '';
+            const playerToken = document.getElementById('player-token');
+            if (playerToken) {
+                playerToken.innerHTML = avatarHtml;
+                if (avatarHtml) {
+                    playerToken.classList.remove('hidden');
+                } else {
+                    playerToken.classList.add('hidden');
+                }
+            }
+            const adventurePlayer = document.getElementById('adventure-player');
+            if (adventurePlayer) {
+                adventurePlayer.innerHTML = avatarHtml || '🧍';
+            }
+            const statusAvatar = document.getElementById('status-avatar');
+            if (statusAvatar) {
+                statusAvatar.innerHTML = avatarHtml;
+            }
+        }
+
         function finalStart(charId) {
             state.charId = charId;
             state.active = true;
@@ -1459,12 +1480,8 @@ si<!DOCTYPE html>
             document.getElementById('top-status').classList.remove('hidden');
             document.getElementById('move-btn-ctrl').classList.remove('hidden');
             
-            const playerToken = document.getElementById('player-token');
-            playerToken.innerHTML = charAssets[charId];
-            playerToken.classList.remove('hidden');
-            
+            setPlayerAvatar();
             document.getElementById('display-player-name').innerText = state.playerName;
-            document.getElementById('status-avatar').innerHTML = charAssets[charId];
             
             updateTokenPos();
             updateControlButtons();
@@ -1859,8 +1876,7 @@ si<!DOCTYPE html>
             const player = document.getElementById('adventure-player');
             player.style.left = '50%';
             player.style.bottom = '12%';
-            // Set player avatar to match selected character
-            player.innerHTML = charAssets[state.charId];
+            setPlayerAvatar();
 
             const stage = document.getElementById('adventure-stage');
             stage.querySelectorAll('.adventure-obstacle').forEach(el => el.remove());
