@@ -143,6 +143,16 @@ si<!DOCTYPE html>
             margin-bottom: clamp(10px, 3vw, 20px);
         }
 
+        .screen-char-title {
+            color: #fcd34d;
+            font-size: clamp(28px, 9vw, 42px);
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: clamp(14px, 4vw, 22px);
+            text-transform: uppercase;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
         h2 {
             color: #5EB3D6;
             font-size: clamp(24px, 6vw, 36px);
@@ -894,6 +904,11 @@ si<!DOCTYPE html>
                 grid-template-columns: repeat(auto-fit, minmax(clamp(100px, 20vw, 140px), 1fr));
                 gap: clamp(12px, 4vw, 25px);
                 margin-bottom: clamp(15px, 4vw, 30px);
+                width: 100%;
+            }
+            .screen-char-title {
+                font-size: clamp(24px, 8vw, 32px);
+                margin-bottom: clamp(12px, 3vw, 18px);
             }
 
             .char-card {
@@ -1189,7 +1204,7 @@ si<!DOCTYPE html>
     <!-- SCREEN 3: Pilih Karakter -->
     <div id="screen-char" class="screen-overlay hidden">
         <div style="text-align: center; width: 100%; max-width: clamp(500px, 95vw, 1000px);">
-            <h1 style="color: #fcd34d;">PILIH AVATARMU</h1>
+            <h1 class="screen-char-title">PILIH AVATARMU</h1>
             <div class="char-grid" id="selection-grid"></div>
         </div>
     </div>
