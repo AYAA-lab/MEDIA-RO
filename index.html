@@ -900,25 +900,34 @@ si<!DOCTYPE html>
                 max-width: 90%;
             }
 
-            .char-grid {
-                grid-template-columns: repeat(auto-fit, minmax(clamp(100px, 20vw, 140px), 1fr));
-                gap: clamp(12px, 4vw, 25px);
-                margin-bottom: clamp(15px, 4vw, 30px);
-                width: 100%;
+            .screen-overlay .content-card {
+                width: 95vw;
+                max-width: 95vw;
             }
+
             .screen-char-title {
-                font-size: clamp(24px, 8vw, 32px);
-                margin-bottom: clamp(12px, 3vw, 18px);
+                font-size: clamp(22px, 8vw, 28px);
+                margin-bottom: clamp(10px, 3vw, 16px);
+                letter-spacing: 0.08em;
+            }
+
+            .char-grid {
+                grid-template-columns: repeat(2, minmax(120px, 1fr));
+                gap: clamp(10px, 4vw, 18px);
+                margin-bottom: clamp(15px, 4vw, 24px);
+                width: 100%;
             }
 
             .char-card {
-                padding: clamp(10px, 2.5vw, 15px);
+                padding: clamp(10px, 2vw, 14px);
+                min-height: 170px;
                 border: clamp(1px, 0.4vw, 2px) solid #a78bfa;
             }
 
-            .char-svg {
-                width: clamp(60px, 13vw, 80px);
-                height: clamp(75px, 16vw, 100px);
+            .char-svg,
+            .char-card svg {
+                width: clamp(55px, 17vw, 72px) !important;
+                height: clamp(70px, 19vw, 85px) !important;
             }
 
             .quiz-header {
