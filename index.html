@@ -767,7 +767,8 @@ si<!DOCTYPE html>
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            gap: clamp(10px, 2vw, 14px);
             overflow: hidden;
         }
 
@@ -915,11 +916,12 @@ si<!DOCTYPE html>
             .screen-overlay .content-card {
                 width: 95vw;
                 max-width: 95vw;
+                padding-top: clamp(22px, 5vw, 28px);
             }
 
             .screen-char-title {
                 font-size: clamp(22px, 8vw, 28px);
-                margin-bottom: clamp(10px, 3vw, 16px);
+                margin: clamp(8px, 3vw, 14px) 0 clamp(12px, 4vw, 18px);
                 letter-spacing: 0.08em;
             }
 
@@ -1059,6 +1061,9 @@ si<!DOCTYPE html>
             .char-card {
                 padding: clamp(8px, 2vw, 12px);
                 border: clamp(1px, 0.3vw, 1.5px) solid #a78bfa;
+                min-height: auto;
+                aspect-ratio: 3 / 4;
+                justify-content: flex-start;
             }
 
             .char-svg {
